@@ -45,7 +45,7 @@ par_grid_in_region <- function( grid=c(3,4),
   }
 
   if( new==T ){
-      par( mfg =c( 1, 1 ) )
+    par( mfg =c( 1, 1 ) )
   }
 
 
