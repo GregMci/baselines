@@ -1,9 +1,10 @@
-#' Create spiral with equidistant points (archimedes spiral approximation)
+#' Create spiral with equidistant points (approximation of Archimedes spiral)
 #'
-#' @param turns_to how many turns in spiral
-#' @param turns_from start point in turns on spiral
-#' @param n_points number of (approximately) equidistant points on spiral
-#' @param rotate rotation for spiral
+#' @param turns_to turns in spiral
+#' @param turns_from turns to clip from centre of spiral
+#' @param n_points integer, number of (approximately) equidistant points on spiral
+#' @param rotate rotation for spiral (degrees by default)
+#' @param units units for rotation "degrees" (default) or "radians"
 #' @param flip_x multiplier for x values to flip direction (-1 reflect in y axis)
 #' @param flip_y multiplier for x values to flip direction (-1 reflect in x axis)
 #'
@@ -17,7 +18,13 @@
 #'  for( i in c( 1, 2, 3, 5, 10 ) ){
 #'    my_spiral <- spiral_equal_spacing( turns_to = i, turns_from=j )
 #'    plot_blank( -1:1, -1:1, asp=1 )
-#'    lines( my_spiral[[1]]$x, my_spiral[[1]]$y, col="pink2", lwd=3 )
+#'    cnt <- 0
+#'    for( k in i:0 ){
+#'      cnt <- cnt+1
+#'      if( cnt%%2 ==0 ) colr <- "grey98" else colr<- "grey90"
+#'      polygon( k/i*arc_points(), col=colr, border=F )
+#'    }
+#'    lines( my_spiral[[1]]$x, my_spiral[[1]]$y, col="pink2", lwd=2 )
 #'    lines(arc_points(), col="grey80", lwd=0.5)
 #'    points( my_spiral[[2]]$x, my_spiral[[2]]$y, pch=21, col="white", bg="black",cex=2, lwd=2 )
 #'    text( -1, 1, paste("from=", j), adj=0)
@@ -53,9 +60,18 @@
 #'    text( 0, 0, paste( "flip_y=", j ), pos=1, cex=1.5, col="grey40" )
 #'  }
 #'}
+#'i <- (-193/360)*2*pi
+#'my_spiral <- spiral_equal_spacing( rotate = i, units="radians" )
+#'plot_blank( -1:1, -1:1, asp=1 )
+#'lines( my_spiral[[1]]$x, my_spiral[[1]]$y, col="cyan3", lwd=3 )
+#'lines(arc_points(), col="grey80", lwd=0.5)
+#'points( my_spiral[[2]]$x, my_spiral[[2]]$y, pch=21, col="white", bg="black",cex=2, lwd=2 )
+#'text( 0, 0, "RADIANS=", adj=c(0.5, -0.6), cex=1.8, col="grey70" )
+#'text( 0, 0, "rotate=", adj=c(0.5, -0), cex=1, col="grey70" )
+#'text( 0, 0, round( i, digits=2), pos=1, cex=2, col="grey70" )
 
 
-spiral_equal_spacing <- function( turns_to = 5, turns_from = 3, n_points=20, rotate = 0, flip_x = 1, flip_y =1 ){
+spiral_equal_spacing <- function( turns_to = 5, turns_from = 3, n_points=20, rotate = 0, units="degrees", flip_x = 1, flip_y =1 ){
 
   # add clockwise inward param?
   # add start point instead of rotate?
@@ -83,7 +99,7 @@ spiral_equal_spacing <- function( turns_to = 5, turns_from = 3, n_points=20, rot
     x <- flip_x*x / max_val
     y <- flip_y*y / max_val
 
-    xy <- rotate( x, y, rotation = rotate )
+    xy <- rotate( x, y, rotation = rotate, units=units )
 
     # Calculation of equidistant (xi,yi) points on spiral.
     smax1 <- 0.5*b*((hole/thetamax)*thetamax)^2
@@ -94,7 +110,7 @@ spiral_equal_spacing <- function( turns_to = 5, turns_from = 3, n_points=20, rot
     xi <-  flip_x*(1/ max_val)*b*thetai*cos(thetai)
     yi <- flip_y*(1/ max_val)*b*thetai*sin(thetai)
 
-    xyi <- rotate( xi, yi, rotation=rotate )
+    xyi <- rotate( xi, yi, rotation=rotate, units=units )
 
     # remove extra columns form rotation outputs
     spiral_line <- xy[,1:2]
