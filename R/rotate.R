@@ -38,7 +38,7 @@
 
 rotate <-  function( x, y, centre = c( 0, 0 ), rotation = 0, units = "degrees" ){
 
-  if( is.null(centre) == T){
+  if( is.null(centre) == T ){
       centre <- get_centroid( x, y )
   } else{
       if ( is.numeric( centre ) !=T ) centre <- as.numeric( centre )
@@ -56,6 +56,7 @@ rotate <-  function( x, y, centre = c( 0, 0 ), rotation = 0, units = "degrees" )
       rotate_by <- degrees_2_radians( rotation %% 360 )
   } else {
     # ERROR
+    message( "units must be 'degrees' (default) or 'radians'..." )
   }
 
   # rescale for centre/fixed point
